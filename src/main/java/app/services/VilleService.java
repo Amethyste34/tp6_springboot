@@ -45,9 +45,9 @@ public class VilleService {
     }
 
     /**
-     * Crée une nouvelle ville.
-     * @param ville la ville à insérer
-     * @return la ville insérée avec son ID généré
+     * Insère une ville en base.
+     * @param ville Ville à insérer
+     * @return Ville sauvegardée
      */
     public Ville insertVille(Ville ville) {
         return villeDao.save(ville);

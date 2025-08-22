@@ -9,36 +9,28 @@ import app.entities.Departement;
 public class VilleMapper {
 
     /**
-     * Convertit une entité Ville en VilleDto.
-     * @param ville la ville à convertir
-     * @return le DTO correspondant
+     * Transforme un DTO en entité Ville.
+     * @param dto DTO de la ville
+     * @param dep Département associé
+     * @return Ville entity
      */
-    public static VilleDto toDto(Ville ville) {
-        if (ville == null) return null;
-        Long codeDep = ville.getDepartement() != null ? ville.getDepartement().getId() : null;
-        return new VilleDto(
-                ville.getId(),
-                ville.getNom(),
-                ville.getPopulationMunicipale(),
-                ville.getPopulationTotale(),
-                codeDep
-        );
+    public static Ville toEntity(VilleDto dto, Departement dep) {
+        Ville v = new Ville();
+        v.setId(dto.getId());
+        v.setNom(dto.getNom());
+        v.setPopulationMunicipale(dto.getPopulationMunicipale());
+        v.setPopulationTotale(dto.getPopulationTotale());
+        v.setDepartement(dep);
+        return v;
     }
 
-    /**
-     * Convertit un VilleDto en entité Ville.
-     * @param dto le DTO
-     * @param departement le département associé à la ville
-     * @return l'entité Ville
-     */
-    public static Ville toEntity(VilleDto dto, Departement departement) {
-        if (dto == null) return null;
-        Ville ville = new Ville();
-        ville.setId(dto.getId());
-        ville.setNom(dto.getNom());
-        ville.setPopulationMunicipale(dto.getPopulationMunicipale());
-        ville.setPopulationTotale(dto.getPopulationTotale());
-        ville.setDepartement(departement);
-        return ville;
+    public static VilleDto toDto(Ville v) {
+        VilleDto dto = new VilleDto();
+        dto.setId(v.getId());
+        dto.setNom(v.getNom());
+        dto.setPopulationMunicipale(v.getPopulationMunicipale());
+        dto.setPopulationTotale(v.getPopulationTotale());
+        dto.setCodeDepartement(v.getDepartement().getCode());
+        return dto;
     }
 }

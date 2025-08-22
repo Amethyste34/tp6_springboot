@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +35,11 @@ public class CsvLoader {
      */
     @PostConstruct
     public void loadCsv() {
+        List<Ville> villes = villeDao.findAll();
+        if (villes.size() > 0) {
+            return;
+        }
+
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(
                         getClass().getClassLoader().getResourceAsStream("recensement.csv"),
@@ -78,7 +84,6 @@ public class CsvLoader {
                 ville.setPopulationMunicipale(populationMunicipale);
                 ville.setPopulationTotale(populationTotale);
                 ville.setDepartement(departement);
-                ville.setCode(codeDepartement); // Champ obligatoire
 
                 villeDao.save(ville);
             }

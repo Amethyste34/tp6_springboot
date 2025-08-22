@@ -20,10 +20,6 @@ public class Ville {
     @Column(nullable = false)
     private String nom;
 
-    /** Code de la commune */
-    @Column(nullable = false)
-    private String code;
-
     /** Population municipale */
     @Column(nullable = false)
     private int populationMunicipale;
@@ -33,8 +29,8 @@ public class Ville {
     private int populationTotale;
 
     /** Département auquel appartient la ville */
-    @ManyToOne
-    @JoinColumn(name = "departement_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "departement_id", nullable = false)
     private Departement departement;
 
     /**
@@ -58,14 +54,6 @@ public class Ville {
 
     public void setNom(String nom) {
         this.nom = nom;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public int getPopulationMunicipale() {

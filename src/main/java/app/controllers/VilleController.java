@@ -51,15 +51,25 @@ public class VilleController {
         return ResponseEntity.ok(VilleMapper.toDto(ville));
     }
 
-    /** Crée une nouvelle ville */
+    /**
+     * Crée une nouvelle ville.
+     * @param dto VilleDto contenant les informations de la ville
+     * @return VilleDto créé ou 400 si département invalide
+     */
     @PostMapping
-    public ResponseEntity<VilleDto> createVille(@RequestBody VilleDto dto) {
-        Departement dep = departementService.extractDepartement(dto.getCodeDepartement());
-        if (dep == null) {
-            return ResponseEntity.badRequest().body(null);
+    public ResponseEntity<?> createVille(@RequestBody VilleDto dto) {
+        if (dto.getCodeDepartement() == null) {
+            return ResponseEntity.badRequest().body("Le code département doit être renseigné");
         }
+
+        Departement dep = departementService.extractDepartementByCode(dto.getCodeDepartement());
+        if (dep == null) {
+            return ResponseEntity.badRequest().body("Le département n'existe pas en base");
+        }
+
         Ville ville = VilleMapper.toEntity(dto, dep);
         Ville saved = villeService.insertVille(ville);
+
         return ResponseEntity.ok(VilleMapper.toDto(saved));
     }
 
@@ -69,7 +79,7 @@ public class VilleController {
         Ville existingVille = villeService.extractVilleById(id);
         if (existingVille == null) return ResponseEntity.notFound().build();
 
-        Departement dep = departementService.extractDepartement(dto.getCodeDepartement());
+        Departement dep = departementService.extractDepartementByCode(dto.getCodeDepartement());
         if (dep == null) return ResponseEntity.badRequest().build();
 
         Ville updatedVille = VilleMapper.toEntity(dto, dep);

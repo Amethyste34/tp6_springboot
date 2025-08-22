@@ -10,13 +10,13 @@ public class VilleDto {
     private String nom;
     private int populationMunicipale;
     private int populationTotale;
-    private Long codeDepartement; // id du département
+    private String codeDepartement;
 
     /** Constructeur vide requis par Spring et Jackson */
     public VilleDto() {}
 
     /** Constructeur complet */
-    public VilleDto(Long id, String nom, int populationMunicipale, int populationTotale, Long codeDepartement) {
+    public VilleDto(Long id, String nom, int populationMunicipale, int populationTotale, String codeDepartement) {
         this.id = id;
         this.nom = nom;
         this.populationMunicipale = populationMunicipale;
@@ -37,6 +37,6 @@ public class VilleDto {
     public int getPopulationTotale() { return populationTotale; }
     public void setPopulationTotale(int populationTotale) { this.populationTotale = populationTotale; }
 
-    public Long getCodeDepartement() { return codeDepartement; }
-    public void setCodeDepartement(Long codeDepartement) { this.codeDepartement = codeDepartement; }
+    public String getCodeDepartement() { return codeDepartement; }
+    public void setCodeDepartement(String codeDepartement) { this.codeDepartement = codeDepartement; }
 }
