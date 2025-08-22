@@ -2,7 +2,10 @@ package app.controllers;
 
 import app.dto.DepartementDto;
 import app.dto.DepartementMapper;
+import app.dto.VilleDto;
+import app.dto.VilleMapper;
 import app.entities.Departement;
+import app.entities.Ville;
 import app.services.DepartementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -66,5 +69,40 @@ public class DepartementController {
     public ResponseEntity<Void> deleteDepartement(@PathVariable Long id) {
         boolean deleted = departementService.deleteDepartement(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Top N villes d’un département (par populationTotale décroissante).
+     * Ex: GET /departements/01/villes/top/5
+     */
+    @GetMapping("/{code}/villes/top/{n}")
+    public ResponseEntity<List<VilleDto>> getTopNVilles(
+            @PathVariable String code,
+            @PathVariable int n) {
+
+        Departement dep = departementService.extractDepartementByCode(code);
+        if (dep == null) return ResponseEntity.notFound().build();
+
+        List<Ville> villes = departementService.getTopNVilles(code, n);
+        List<VilleDto> dtos = villes.stream().map(VilleMapper::toDto).toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+    /**
+     * Villes d’un département dont la populationTotale est comprise entre min et max.
+     * Ex: GET /departements/01/villes/population?min=1000&max=5000
+     */
+    @GetMapping("/{code}/villes/population")
+    public ResponseEntity<List<VilleDto>> getVillesByPopulation(
+            @PathVariable String code,
+            @RequestParam int min,
+            @RequestParam int max) {
+
+        Departement dep = departementService.extractDepartementByCode(code);
+        if (dep == null) return ResponseEntity.notFound().build();
+
+        List<Ville> villes = departementService.getVillesByPopulation(code, min, max);
+        List<VilleDto> dtos = villes.stream().map(VilleMapper::toDto).toList();
+        return ResponseEntity.ok(dtos);
     }
 }

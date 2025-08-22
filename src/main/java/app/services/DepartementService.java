@@ -4,9 +4,11 @@ import app.dao.DepartementDao;
 import app.dto.DepartementDto;
 import app.dto.DepartementMapper;
 import app.entities.Departement;
+import app.entities.Ville;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,4 +65,28 @@ public class DepartementService {
         }
         return false;
     }
+
+    /**
+     * Top N villes d’un département (populationTotale décroissante).
+     */
+    public List<Ville> getTopNVilles(String codeDepartement, int n) {
+        Departement d = extractDepartementByCode(codeDepartement);
+        if (d == null || d.getVilles() == null) return List.of();
+        return d.getVilles().stream()
+                .sorted(Comparator.comparingInt(Ville::getPopulationTotale).reversed())
+                .limit(n)
+                .toList();
+    }
+
+    /**
+     * Villes d’un département avec populationTotale entre min et max (inclus).
+     */
+    public List<Ville> getVillesByPopulation(String codeDepartement, int minPopulation, int maxPopulation) {
+        Departement d = extractDepartementByCode(codeDepartement);
+        if (d == null || d.getVilles() == null) return List.of();
+        return d.getVilles().stream()
+                .filter(v -> v.getPopulationTotale() >= minPopulation && v.getPopulationTotale() <= maxPopulation)
+                .toList();
+    }
+
 }
